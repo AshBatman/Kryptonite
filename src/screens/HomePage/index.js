@@ -3,10 +3,8 @@ import { Text } from 'react-native-elements';
 import { TouchableWithoutFeedback, StyleSheet, View } from "react-native";
 
 export default function HomePage() {
-
-
-    const daysMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const [month, setMonth] = useState('June');
+    const [currentIndex, setCurrentIndex] = useState(2)
     const [dates, setDates] = useState([
         {
             day: 'Su',
@@ -141,23 +139,12 @@ export default function HomePage() {
             disabled: false
         },
     ]
-
-    const [currentIndex, setCurrentIndex] = useState(2)
-
     const onChangeDate = (index) => {
-        if (currentIndex !== index) {
-            const newArray = dates;
-            newArray[currentIndex].hightlight = false;
-            newArray[index].hightlight = true;
-            setCurrentIndex(index);
-            setDates(newArray);
-        } else {
-            const newArray = dates;
-            newArray[index].hightlight = true;
-            setCurrentIndex(index);
-            setDates(newArray);
-        }
-
+        const newArray = dates;
+        newArray[currentIndex].hightlight = false;
+        newArray[index].hightlight = true;
+        setCurrentIndex(index);
+        setDates(newArray);
     }
 
     const onChangeWeek = (args) => {
@@ -172,16 +159,16 @@ export default function HomePage() {
     return (
         <>
             <Text>Select Date</Text>
-            <View style={{ flexDirection: 'row', marginLeft: 30 }}>
+            <View style={{ flexDirection: 'row', marginLeft: 30, marginTop: 15 }}>
                 <TouchableWithoutFeedback onPress={() => onChangeWeek(true)}>
-                    <Text style={{ textAlignVertical: 'center', fontWeight: 'bold', marginRight: 5 }}>{'<'}</Text>
+                    <Text style={{ textAlignVertical: 'center', fontWeight: 'bold', marginRight: 8, backgroundColor: '#D4D1D1', borderRadius: 50, paddingLeft: 8, paddingRight: 8, color: '#424C58' }}>{'<'}</Text>
                 </TouchableWithoutFeedback>
                 <Text style={[styles.day, { fontSize: 18 }]}>{month}</Text>
                 <TouchableWithoutFeedback onPress={() => onChangeWeek(false)}>
-                    <Text style={{ textAlignVertical: 'center', fontWeight: 'bold', marginLeft: 5 }}>{'>'}</Text>
+                    <Text style={{ textAlignVertical: 'center', fontWeight: 'bold', marginLeft: 8, backgroundColor: '#D4D1D1', borderRadius: 50, paddingLeft: 8, paddingRight: 8, color: '#424C58' }}>{'>'}</Text>
                 </TouchableWithoutFeedback>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginLeft: 25, marginRight: 25, marginTop: 15 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginLeft: 25, marginRight: 25, marginTop: 12 }}>
                 {dates.map((day, index) => {
                     return (
                         <TouchableWithoutFeedback key={index.toString()} onPress={day.disabled ? () => { } : () => onChangeDate(index)}>
@@ -198,9 +185,6 @@ export default function HomePage() {
 }
 
 const styles = StyleSheet.create({
-    dayStyle: {
-
-    },
     day: {
         textAlign: 'center',
         fontWeight: 'bold'

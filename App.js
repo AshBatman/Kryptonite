@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomePage from './src/screens/HomePage';
 import { SCREENS } from './src/constants';
 import { colors } from './src/common/colors';
+// import './global';
 
 const Stack = createStackNavigator();
 

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native-elements';
 import { TouchableWithoutFeedback, StyleSheet, View } from "react-native";
+import { web3Api } from '../../utils/web3'
 
 export default function HomePage() {
     const [month, setMonth] = useState('June');
@@ -156,6 +157,22 @@ export default function HomePage() {
             setMonth('August');
         }
     }
+
+    useEffect(() => {
+
+
+        var loc = new Int32Array(2);
+        loc[0] = 110092;
+
+        //console.log(loc);
+
+        web3Api.methods.return_avail_vacc(loc[0]).call().then(function (result) {
+            //   $("#DISPLAY").html(result);
+            console.log(result);
+        });
+
+    }, [])
+
     return (
         <>
             <Text>Select Date</Text>
@@ -171,10 +188,10 @@ export default function HomePage() {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginLeft: 25, marginRight: 25, marginTop: 12 }}>
                 {dates.map((day, index) => {
                     return (
-                        <TouchableWithoutFeedback key={index.toString()} onPress={day.disabled ? () => { } : () => onChangeDate(index)}>
+                        <TouchableWithoutFeedback key={`${index.toString()}`} onPress={day.disabled ? () => { } : () => onChangeDate(index)}>
                             <View style={[styles.hightlight, month === 'August' && { paddingLeft: 13, paddingRight: 13 }, day.hightlight && { backgroundColor: '#26BDD6' }]}>
-                                <Text key={index.toString()} style={[styles.day, { marginBottom: 5, color: '#666666', fontSize: 12 }, day.hightlight && { color: 'white' }]}>{day.day}</Text>
-                                <Text key={index.toString()} style={[styles.day, { fontSize: 18 }, day.hightlight && { color: 'white' }, day.disabled && { color: 'grey' }]}>{day.date}</Text>
+                                <Text style={[styles.day, { marginBottom: 5, color: '#666666', fontSize: 12 }, day.hightlight && { color: 'white' }]}>{day.day}</Text>
+                                <Text style={[styles.day, { fontSize: 18 }, day.hightlight && { color: 'white' }, day.disabled && { color: 'grey' }]}>{day.date}</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     )

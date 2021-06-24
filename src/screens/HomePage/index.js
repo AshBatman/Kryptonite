@@ -1,45 +1,86 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from "react-native";
+import { Alert, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { web3Api } from '../../utils/web3'
 import DatePicker from './DatePicker';
 import { colors } from '../../common/colors'
 import Input from '../Input';
 import Button from '../Button';
+import HospitalCard from './HospitalCard'
+import SlidingPopup from '../SlidingPopup';
+import SuccessPaymentPanel from './SuccessPaymentPanel'
 
 export default function HomePage() {
-    useEffect(() => {
 
+    const [slots, setSlots] = useState([])
+    const [pincode, setPincode] = useState([])
+    const [selectedSlot, setSelectedSlot] = useState()
+    const [visible, setVisible] = useState(false)
 
-        var loc = new Int32Array(2);
-        loc[0] = 110092;
+    const fetchAvailableSlots = () => {
+        if (!pincode || pincode.length < 6 || isNaN(pincode)) {
+            Alert.alert("Enter valid Pincode!")
+        } else {
 
-        //console.log(loc);
+            web3Api.methods.return_avail_vacc(pincode).call().then(function (result) {
+                setSlots(result)
+            });
+        }
+    }
 
-        web3Api.methods.return_avail_vacc(loc[0]).call().then(function (result) {
-            //   $("#DISPLAY").html(result);
-            console.log(result);
-        });
-
-    }, [])
+    const bookSlot = () => {
+        setVisible(true)
+    }
 
     return (
         <View>
             <View style={{ backgroundColor: colors.MAIN, height: 100, width: '100%' }}>
 
             </View>
-            <View style={{ height: 300, width: '100%', borderRadius: 20, marginTop: -30, backgroundColor: colors.WHITE, padding: 20 }}>
-                <DatePicker />
+            <View style={{
+                height: '90%',
+                width: '100%',
+                borderRadius: 20,
+                marginTop: -30,
+                backgroundColor: colors.WHITE,
+                paddingTop: 20,
+            }}>
+                <ScrollView>
+                    <View style={{ paddingLeft: 20, paddingRight: 20 }}>
 
-                <Input
-                    placeholder='Enter Pincode'
-                />
+                        <DatePicker />
 
+                        <Input
+                            type="tel"
+                            placeholder='Enter Pincode'
+                            onChangeText={value => setPincode(value)}
+                            keyboardType={'number-pad'}
+                        />
+
+                        <Button
+                            title="CHECK AVAILABILITY"
+                            titleStyle={{ color: '#FFBF00' }}
+                            onPress={fetchAvailableSlots}
+                        />
+
+                    </View>
+                    <View style={{ marginTop: 20 }}>
+                        {slots.map((slot) => {
+                            return slot[0] ? <HospitalCard selectedSlot={selectedSlot} slot={slot} changeSlot={setSelectedSlot} /> : null
+                        })}
+                    </View>
+                </ScrollView>
+            </View>
+            <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
                 <Button
-                    title="CHECK AVAILABILITY"
+                    title="BOOK SLOT"
                     titleStyle={{ color: '#FFBF00' }}
-                // onPress={handleAddNote}
+                    onPress={bookSlot}
                 />
             </View>
+
+            <SlidingPopup visible={visible} setVisible={setVisible} >
+                <SuccessPaymentPanel pincode={pincode} setVisible={setVisible} />
+            </SlidingPopup>
         </View>
     )
 }

@@ -15,6 +15,8 @@ export default function HomePage() {
     const [pincode, setPincode] = useState([])
     const [selectedSlot, setSelectedSlot] = useState()
     const [visible, setVisible] = useState(false)
+    const [selectedDate, setSelectedDate] = useState(0)
+
 
     const fetchAvailableSlots = () => {
         if (!pincode || pincode.length < 6 || isNaN(pincode)) {
@@ -28,7 +30,21 @@ export default function HomePage() {
     }
 
     const bookSlot = () => {
-        setVisible(true)
+        const [, slot] = selectedSlot.split("_")
+        const name = "Sabari"
+
+        web3Api.methods.confirm_booking(pincode, name, slot).call().then(function (result) {
+            console.log(result, "resdvsdfsdvsd");
+            if (result[0] == 0) {
+                Alert.alert("Something went wrong while booking a slot!")
+            }
+            else {
+                web3Api.methods.confirm_booking(pincode, name, slot).send({ from: acc }).then(function (result_book) {
+                    console.log(result_book, "result_bookresult_bookresult_bookresult_book");
+                });
+                setVisible(true)
+            }
+        })
     }
 
     return (
@@ -47,7 +63,7 @@ export default function HomePage() {
                 <ScrollView>
                     <View style={{ paddingLeft: 20, paddingRight: 20 }}>
 
-                        <DatePicker />
+                        <DatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
                         <Input
                             type="tel"
@@ -65,7 +81,7 @@ export default function HomePage() {
                     </View>
                     <View style={{ marginTop: 20 }}>
                         {slots.map((slot) => {
-                            return slot[0] ? <HospitalCard selectedSlot={selectedSlot} slot={slot} changeSlot={setSelectedSlot} /> : null
+                            return slot[0] ? <HospitalCard selectedDate={selectedDate} selectedSlot={selectedSlot} slot={slot} changeSlot={setSelectedSlot} /> : null
                         })}
                     </View>
                 </ScrollView>

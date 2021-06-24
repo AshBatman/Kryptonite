@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native-elements';
 import { TouchableWithoutFeedback, StyleSheet, View } from "react-native";
 
-export default function DatePicker() {
+export default function DatePicker({ selectedDate, setSelectedDate }) {
     const [month, setMonth] = useState('June');
     const [currentIndex, setCurrentIndex] = useState(2)
     const [dates, setDates] = useState([
@@ -140,6 +140,7 @@ export default function DatePicker() {
         },
     ]
     const onChangeDate = (index) => {
+        setSelectedDate(index)
         const newArray = dates;
         newArray[currentIndex].hightlight = false;
         newArray[index].hightlight = true;

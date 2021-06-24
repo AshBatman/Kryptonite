@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Alert, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { Text } from 'react-native-elements';
 import { colors } from '../../common/colors';
 
-export default function HospitalCard({ slot, changeSlot, selectedSlot }) {
-
+export default function HospitalCard({ slot, changeSlot, selectedSlot, selectedDate }) {
     const [HospitalId, HospitalName] = slot[0].split("-")
 
     return (
@@ -14,7 +13,7 @@ export default function HospitalCard({ slot, changeSlot, selectedSlot }) {
                     {HospitalName}
                 </Text>
                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                    {slot[1][0]} Available
+                    {slot[1][selectedDate]} Available
                 </Text>
             </View>
             <Text style={{ fontSize: 16 }}>Slots Available</Text>
